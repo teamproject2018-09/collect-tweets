@@ -4,16 +4,19 @@ import json
 import re
 import sys
 
-COMMAND = sys.argv[0]
+COMMAND = sys.argv.pop(0)
 DATEFORMAT = "%a %b %d %H:%M:%S %z %Y"
-FIELDNAMES = ["id","date","time","datetime","user","hashtags","mentions","reply-count","retweet-count","favorites-count","text"]
+FIELDNAMES = ["id","date","time","datetime","user","hashtags","mentions","reply-count","retweet-count","favorites-count","lang","text"]
 
 patternNewline = re.compile(r"\n")
 patternTimezone = re.compile(r" .\d\d\d\d ")
-with sys.stdout as csvfile:
-    outFile = csv.DictWriter(csvfile,fieldnames=FIELDNAMES)
-    outFile.writeheader()
-    for line in sys.stdin:
+outFile = csv.DictWriter(sys.stdout,fieldnames=FIELDNAMES)
+outFile.writeheader()
+seen = {}
+for inFileName in sys.argv:
+    try: inFile = open(inFileName,"r")
+    except: sys.exit(COMMAND+": cannot read file "+inFileName)
+    for line in inFile:
         jsonLine = json.loads(line)
         if "full_text" in jsonLine and "id_str" in jsonLine and \
            "user" in jsonLine and "screen_name" in jsonLine["user"]:
@@ -33,5 +36,6 @@ with sys.stdout as csvfile:
             hashtags = " ".join(hashtagList)
             mentionList = [e["screen_name"] for e in jsonLine["entities"]["user_mentions"]]
             mentions = " ".join(mentionList)
-            outFile.writerow({"id":tweetId,"date":date,"time":timeString,"datetime":datetimeString,"user":screenName,"hashtags":hashtags,"mentions":mentions,"reply-count":replyCount,"retweet-count":retweetCount,"favorites-count":favoritesCount,"text":text})
-    csvfile.close()
+            lang = jsonLine["lang"]
+            outFile.writerow({"id":tweetId,"date":date,"time":timeString,"datetime":datetimeString,"user":screenName,"hashtags":hashtags,"mentions":mentions,"reply-count":replyCount,"retweet-count":retweetCount,"favorites-count":favoritesCount,"lang":lang,"text":text})
+    inFile.close()
