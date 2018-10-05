@@ -26,4 +26,4 @@ Alternatively, tweets found on the Twitter website can be stored in html files w
 
   process-html.py infile1.html [infile2.html ...] > outfile.csv
 
-Nex, the csv files can be visualized with the notebook in the _visualization section: https://github.com/teamproject2018-09/visualization
+Next, the csv files can be visualized with the notebook in the _visualization section: https://github.com/teamproject2018-09/visualization
