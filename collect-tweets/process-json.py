@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+"""
+    process-json.py: convert json file with tweets to csv format 
+    usage: process-json.py infile1.json [infile2.json ...] > outfile.csv
+    note: keeps only a selected group of fields of the json file
+          (see FIELDNAMES variable for list)
+    20180924 erikt(at)xs4all.nl
+"""
+
 import csv
 from datetime import datetime
 import json

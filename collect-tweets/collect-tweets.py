@@ -1,10 +1,24 @@
+#!/usr/bin/env python3
+"""
+    collect-tweets.py: collect tweets from Twitter API
+    usage: collect-tweets.py [-u|-s] user-name
+    notes: 
+    . requires twitter access keys stored in file definitions.py (not supplied)
+    . requires python library tweepy for retrieving tweets
+    . outputs json: one tweet per line
+    . maximum search window is the most recent 10 days (set by Twitter)
+    20180924 erikt(at)xs4all.nl
+"""
+
 import definitions
+import getopt
 import json
 import sys
 import tweepy
 
 TASK = "getUserTweets" # getUserTweets or searchForTweets
 COMMAND = sys.argv.pop(0)
+USAGE = "usage: "+COMMAND+" [-u|-s] user"
 NBROFTWEETS = 200
 
 def authenticate():
@@ -42,8 +56,12 @@ def printList(thisList):
     for t in thisList: print(t)
     return()
 
-if len(sys.argv) < 1: sys.exit("usage: "+COMMAND+" user")
-user = sys.argv.pop(0)
+opts,args = getopt.getopt(sys.argv,"su")
+if len(opts) != 1 or len(args) != 1: sys.exit(USAGE)
+user = args[0]
+if opts[0][0] == "-u": TASK = "getUserTweets"
+elif opts[0][0] == "-s": TASK = "searchForTweets"
+else: sys.exit(USAGE)
 
 auth = authenticate()
 api = tweepy.API(auth)

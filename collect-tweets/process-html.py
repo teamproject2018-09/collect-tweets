@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+"""
+    process-html.py: convert html file with tweets to csv format 
+    usage: process-html.py infile1.html [infile2.html ...] > outfile.csv
+    note: keeps only a selected group of fields of the json file
+          (see FIELDNAMES variable for list)
+          html files were search results from the Twitter website saved in Firefox browser
+    20180924 erikt(at)xs4all.nl
+"""
+
 from bs4 import BeautifulSoup
 import csv
 import re
